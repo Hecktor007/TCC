@@ -72,22 +72,36 @@
 </head>
 <body>
   <h2>Cadastro de Aluno - SENAI</h2>
+  <input type="text" placeholder="Nome completo..." id="nome">
   <input type="email" placeholder="Email do SENAI..." id="email">
+  <input type="text" placeholder="CPF (XXX.XXX.XXX-XX)..." id="cpf">
   <input type="password" placeholder="Senha..." id="senha">
   <button onclick="cadastrar()">Cadastrar</button>
   <button class="voltar" onclick="voltarLogin()">← Voltar para o Login</button>
 
   <script>
     function cadastrar() {
+      const nome = document.getElementById("nome").value;
       const email = document.getElementById("email").value;
+      const cpf = document.getElementById("cpf").value;
       const senha = document.getElementById("senha").value;
 
-      if (email.trim() === "" || senha.trim() === "") {
+      // Validar se todos os campos foram preenchidos
+      if (nome.trim() === "" || email.trim() === "" || cpf.trim() === "" || senha.trim() === "") {
         alert("Por favor, preencha todos os campos.");
-      } else {
-        alert("Cadastro realizado com sucesso!");
-        window.location.href = "login.html";
+        return;
       }
+
+      // Validar CPF com expressão regular (formato XXX.XXX.XXX-XX e 11 dígitos)
+      const cpfRegex = /^(?:\d{3}\.\d{3}\.\d{3}-\d{2})$/;
+      if (!cpfRegex.test(cpf)) {
+        alert("CPF inválido. O CPF deve ter o formato XXX.XXX.XXX-XX e conter exatamente 11 dígitos.");
+        return;
+      }
+
+      // Se a validação for bem-sucedida, exibe uma mensagem de sucesso
+      alert("Cadastro realizado com sucesso!");
+      window.location.href = "login.html";  // Redireciona para a página de login
     }
 
     function voltarLogin() {
