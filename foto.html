@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Foto do Aluno - SENAI</title>
+  <style>
+    :root {
+      --azul-senai: #005faa;
+      --cinza-claro: #f2f2f2;
+      --cinza-medio: #cccccc;
+      --branco: #ffffff;
+      --preto: #333333;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--cinza-claro);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
+
+    h2, h3 {
+      color: var(--azul-senai);
+      margin-top: 20px;
+    }
+
+    video, canvas, img {
+      border: 2px solid var(--cinza-medio);
+      border-radius: 8px;
+      margin: 10px;
+      width: 500px;
+      height: 375px;
+      max-width: 90vw;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .btn-foto {
+      background-color: var(--azul-senai);
+      color: var(--branco);
+    }
+
+    .btn-voltar {
+      background-color: transparent;
+      color: var(--azul-senai);
+      text-decoration: underline;
+    }
+
+    .btn-voltar:hover {
+      color: #003366;
+    }
+
+    .btn-sim {
+      background-color: green;
+      color: white;
+    }
+
+    .btn-nao {
+      background-color: red;
+      color: white;
+    }
+
+    #confirmacao {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Página de Foto do Aluno - SENAI</h2>
+
+  <video id="video" autoplay></video>
+
+  <button class="btn-foto" onclick="tirarFoto()">📷 Tirar Foto</button>
+  <button class="btn-voltar" onclick="voltarLogin()">← Voltar para o Login</button>
+
+  <div id="confirmacao">
+    <h3>Foto Tirada</h3>
+    <img id="fotoCapturada">
+    <p>Você é "<span id="nomeAlunoSpan">Nome do aluno</span>"?</p>
+    <button class="btn-sim" onclick="confirmar()">Sim</button>
+    <button class="btn-nao" onclick="refazer()">Não</button>
+  </div>
+
+  <canvas id="canvas" style="display:none;"></canvas>
+
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const foto = document.getElementById('fotoCapturada');
+    const confirmacao = document.getElementById('confirmacao');
+    const nomeAluno = "João"; // Trocar dinamicamente se necessário
+    document.getElementById('nomeAlunoSpan').textContent = nomeAluno;
+
+    // Ajustar tamanho do canvas para bater com o vídeo
+    canvas.width = 500;
+    canvas.height = 375;
+
+    // Acessar câmera
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+      })
+      .catch(err => {
+        alert('Erro ao acessar a câmera: ' + err);
+      });
+
+    function tirarFoto() {
+      const context = canvas.getContext('2d');
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const imagemData = canvas.toDataURL('image/png');
+      foto.src = imagemData;
+      confirmacao.style.display = 'flex';
+      video.style.display = 'none';
+    }
+
+    function refazer() {
+      confirmacao.style.display = 'none';
+      video.style.display = 'block';
+    }
+
+    function confirmar() {
+      window.location.href = `bemvindo.html?nome=${encodeURIComponent(nomeAluno)}`;
+    }
+
+    function voltarLogin() {
+      window.location.href = "login.html";
+    }
+  </script>
+
+</body>
+</html>

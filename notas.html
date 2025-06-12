@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Minhas Notas - Curso de Mecânica</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --azul-senai: #005faa;        /* Azul SENAI */
+      --amarelo-senai: #fbc02d;     /* Amarelo SENAI */
+      --cinza-claro: #f4f4f4;       /* Cinza Claro */
+      --branco: #ffffff;            /* Branco */
+      --cinza-escuro: #333;         /* Cinza escuro para textos */
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: row;
+      height: 100vh;
+      background-color: var(--cinza-claro);
+    }
+
+    .menu-lateral {
+      width: 250px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      padding: 20px;
+      background-color: var(--azul-senai);
+      color: white;
+      border-right: 2px solid var(--cinza-escuro);
+    }
+
+    .trimestre {
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    .trimestre:hover {
+      background-color: var(--amarelo-senai);
+      color: var(--azul-senai);
+    }
+
+    .conteudo {
+      flex: 1;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      background-color: var(--branco);
+    }
+
+    .titulo {
+      font-size: 26px;
+      color: var(--azul-senai);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .nota-box {
+      width: 220px;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+      font-size: 18px;
+      background-color: var(--cinza-claro);
+    }
+
+    .nota {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 10px;
+      color: var(--azul-senai);
+    }
+
+    button {
+      padding: 12px 30px;
+      background-color: var(--azul-senai);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #004080;
+    }
+
+    button:active {
+      background-color: #003366;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Menu Lateral -->
+  <div class="menu-lateral">
+    <div class="trimestre" onclick="mostrarNotas(1)">1º Trimestre</div>
+    <div class="trimestre" onclick="mostrarNotas(2)">2º Trimestre</div>
+    <div class="trimestre" onclick="mostrarNotas(3)">3º Trimestre</div>
+    <div class="trimestre" onclick="mostrarNotas(4)">4º Trimestre</div>
+  </div>
+
+  <!-- Conteúdo -->
+  <div class="conteudo" id="areaNotas">
+    <div class="titulo">Selecione um trimestre</div>
+  </div>
+
+  <!-- Botão Voltar -->
+  <div class="conteudo">
+    <button onclick="window.location.href='bemvindo.html'">← Voltar</button>
+  </div>
+
+  <script>
+    const notas = {
+      1: {
+        titulo: "Notas do 1º Trimestre",
+        materias: [
+          { nome: "Matemática", nota: 8.5 },
+          { nome: "Desenho Técnico", nota: 7.8 },
+          { nome: "Mecânica Geral", nota: 9.2 },
+          { nome: "Materiais de Construção", nota: 8.0 }
+        ]
+      },
+      2: {
+        titulo: "Notas do 2º Trimestre",
+        materias: [
+          { nome: "Matemática", nota: 7.0 },
+          { nome: "Desenho Técnico", nota: 8.4 },
+          { nome: "Mecânica Geral", nota: 8.9 },
+          { nome: "Processos de Fabricação", nota: 7.5 }
+        ]
+      },
+      3: {
+        titulo: "Notas do 3º Trimestre",
+        materias: [
+          { nome: "Matemática", nota: 9.0 },
+          { nome: "Desenho Técnico", nota: 8.2 },
+          { nome: "Termodinâmica", nota: 9.5 },
+          { nome: "Automação e Controle", nota: 9.0 }
+        ]
+      },
+      4: {
+        titulo: "Notas do 4º Trimestre",
+        materias: [
+          { nome: "Matemática", nota: 8.3 },
+          { nome: "Desenho Técnico", nota: 7.7 },
+          { nome: "Máquinas e Equipamentos", nota: 8.8 },
+          { nome: "Processos de Fabricação", nota: 8.1 }
+        ]
+      }
+    };
+
+    function mostrarNotas(trimestre) {
+      const area = document.getElementById('areaNotas');
+      area.innerHTML = `<div class="titulo">${notas[trimestre].titulo}</div>`;
+      notas[trimestre].materias.forEach(materia => {
+        const box = document.createElement('div');
+        box.className = 'nota-box';
+        box.innerHTML = `
+          <div>${materia.nome}</div>
+          <div class="nota">${materia.nota}</div>
+        `;
+        area.appendChild(box);
+      });
+    }
+  </script>
+
+</body>
+</html>

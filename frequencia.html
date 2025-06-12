@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Frequência</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --azul-senai: #005faa;        /* Azul SENAI */
+      --amarelo-senai: #fbc02d;     /* Amarelo SENAI */
+      --cinza-fundo: #f4f4f4;       /* Cinza para fundo */
+      --cinza-claro: #e5e5e5;       /* Cinza para bordas */
+      --branco: #ffffff;            /* Branco */
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--cinza-fundo);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    .titulo {
+      font-size: 28px;
+      font-weight: bold;
+      color: var(--azul-senai);
+      margin-bottom: 20px;
+    }
+
+    canvas {
+      max-width: 450px;
+      width: 100%;
+      border: 3px solid var(--cinza-claro);
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .botoes {
+      display: flex;
+      justify-content: center;
+    }
+
+    button {
+      padding: 12px 30px;
+      background-color: var(--azul-senai);
+      color: var(--branco);
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #004080;  /* Cor mais escura para o hover */
+    }
+
+    button:active {
+      background-color: #003366;  /* Cor para o clique */
+    }
+
+    /* Responsividade para telas menores */
+    @media (max-width: 768px) {
+      canvas {
+        max-width: 300px;
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="titulo">Frequência em Porcentagem</div>
+
+  <canvas id="graficoFrequencia"></canvas>
+
+  <div class="botoes">
+    <button onclick="window.location.href='bemvindo.html'">← Voltar</button>
+  </div>
+
+  <script>
+    const presencas = 18;
+    const faltas = 5;
+    const total = presencas + faltas;
+
+    const percentualPresenca = (presencas / total * 100).toFixed(1);
+    const percentualFalta = (faltas / total * 100).toFixed(1);
+
+    const ctx = document.getElementById('graficoFrequencia').getContext('2d');
+    new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: [
+          `Presenças (${percentualPresenca}%)`,
+          `Faltas (${percentualFalta}%)`
+        ],
+        datasets: [{
+          data: [percentualPresenca, percentualFalta],
+          backgroundColor: ['#fbc02d', '#005faa'],  // Usando as cores do SENAI
+          borderColor: ['#fff', '#fff'],
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              font: { size: 16 }
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return context.label;
+              }
+            }
+          }
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

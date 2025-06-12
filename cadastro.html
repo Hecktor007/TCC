@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastro - SENAI</title>
+  <style>
+    :root {
+      --azul-senai: #005faa;
+      --cinza-claro: #f2f2f2;
+      --cinza-medio: #cccccc;
+      --branco: #ffffff;
+      --preto: #333333;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--cinza-claro);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    h2 {
+      color: var(--azul-senai);
+      margin-bottom: 20px;
+    }
+
+    input, button {
+      width: 250px;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid var(--cinza-medio);
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--azul-senai);
+      box-shadow: 0 0 5px var(--azul-senai);
+    }
+
+    button {
+      background-color: var(--azul-senai);
+      color: var(--branco);
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #004080;
+    }
+
+    .voltar {
+      background-color: transparent;
+      color: var(--azul-senai);
+      border: none;
+      text-decoration: underline;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .voltar:hover {
+      color: #003366;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>Cadastro de Aluno - SENAI</h2>
+  <input type="email" placeholder="Email do SENAI..." id="email">
+  <input type="password" placeholder="Senha..." id="senha">
+  <button onclick="cadastrar()">Cadastrar</button>
+  <button class="voltar" onclick="voltarLogin()">← Voltar para o Login</button>
+
+  <script>
+    function cadastrar() {
+      const email = document.getElementById("email").value;
+      const senha = document.getElementById("senha").value;
+
+      if (email.trim() === "" || senha.trim() === "") {
+        alert("Por favor, preencha todos os campos.");
+      } else {
+        alert("Cadastro realizado com sucesso!");
+        window.location.href = "login.html";
+      }
+    }
+
+    function voltarLogin() {
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>

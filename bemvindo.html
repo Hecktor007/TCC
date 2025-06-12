@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Bem-vindo - SENAI</title>
+  <style>
+    :root {
+      --azul-senai: #005faa;
+      --cinza-claro: #f2f2f2;
+      --cinza-medio: #cccccc;
+      --branco: #ffffff;
+      --preto: #333333;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--cinza-claro);
+      color: var(--preto);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      height: 100vh;
+      gap: 20px;
+      margin: 0;
+      padding: 0;
+    }
+
+    img {
+      width: 130px;
+      border: 3px solid var(--azul-senai);
+      border-radius: 50%;
+      padding: 10px;
+      background-color: var(--branco);
+    }
+
+    .mensagem {
+      font-size: 26px;
+      border: 2px solid var(--azul-senai);
+      padding: 15px 25px;
+      border-radius: 12px;
+      background-color: var(--branco);
+      color: var(--azul-senai);
+    }
+
+    .botoes {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 15px;
+      color: white;
+      transition: background-color 0.3s;
+    }
+
+    .azul { background-color: var(--azul-senai); }
+    .azul:hover { background-color: #004080; }
+
+    .verde { background-color: #4caf50; }
+    .verde:hover { background-color: #388e3c; }
+
+    .amarelo {
+      background-color: #fbc02d;
+      color: black;
+    }
+    .amarelo:hover {
+      background-color: #f9a825;
+    }
+
+    .vermelho { background-color: #e53935; }
+    .vermelho:hover { background-color: #c62828; }
+  </style>
+</head>
+<body>
+
+  <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Usuário">
+  <div class="mensagem" id="mensagemFinal">Chamada concluída. Bem-vindo...</div>
+
+  <div class="botoes">
+    <button class="azul" onclick="window.location.href='login.html'">Próxima Chamada</button>
+    <button class="verde" onclick="window.location.href='calendario.html'">Calendário</button>
+    <button class="amarelo" onclick="window.location.href='frequencia.html'">Ver a Frequência</button>
+    <button class="vermelho" onclick="window.location.href='notas.html'">Minhas Notas</button>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const nome = params.get("nome") || "Aluno";
+    document.getElementById("mensagemFinal").textContent = `Chamada concluída. Bem-vindo, ${nome}!`;
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - SENAI</title>
+  <style>
+    :root {
+      --azul-senai: #005faa;
+      --cinza-claro: #f2f2f2;
+      --cinza-medio: #cccccc;
+      --branco: #ffffff;
+      --preto: #333333;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--cinza-claro);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    a {
+      align-self: flex-start;
+      margin: 20px;
+      color: var(--azul-senai);
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    img {
+      margin-bottom: 20px;
+      border-radius: 50%;
+      border: 3px solid var(--azul-senai);
+      background-color: var(--branco);
+      padding: 5px;
+    }
+
+    input, button {
+      width: 250px;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid var(--cinza-medio);
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--azul-senai);
+      box-shadow: 0 0 5px var(--azul-senai);
+    }
+
+    button {
+      background-color: var(--azul-senai);
+      color: var(--branco);
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #004080;
+    }
+
+    h1 {
+      color: var(--azul-senai);
+      margin-bottom: 20px;
+    }
+
+  </style>
+</head>
+<body>
+  
+  <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Usuário" width="100">
+  <h1>Login do Aluno - SENAI</h1>
+  <input type="text" placeholder="Digite seu CPF..." id="cpf">
+  <button onclick="login()">Entrar</button>
+  <button onclick="window.location.href='cadastro.html'">Cadastre-se</button>
+
+  <script>
+    function login() {
+      const cpf = document.getElementById("cpf").value;
+      if (cpf.trim() === "") {
+        alert("Por favor, digite seu CPF.");
+      } else {
+        window.location.href = "foto.html";
+      }
+    }
+  </script>
+</body>
+</html>
