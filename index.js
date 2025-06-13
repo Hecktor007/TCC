@@ -5,6 +5,9 @@ const app = express();
 
 
 app.use(express.static(path.join(__dirname, 'public')));
+// Conectando ao banco de dados SQLite
+const db = new sqlite3.Database('chamada.db')
+
 
 
 app.get("/",(req, res) =>{
@@ -13,7 +16,7 @@ res.sendFile(path.join(__dirname, 'public', 'login.html'));
 } )
 
 
- app.get('/cadrasto.html', (req, res) => {
+ app.get('/cadrasto', (req, res) => {
   const sql = `
     CREATE TABLE IF NOT EXISTS usuarios (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -24,9 +27,27 @@ res.sendFile(path.join(__dirname, 'public', 'login.html'));
   criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `;
+
+
+  // Executar o comando SQL para criar a tabela
+  db.run(sql, (err) => {
+    if (err) {
+      res.send('Erro ao criar a tabela:', err.message);
+
+    } else {
+     res.send('Tabela "usuarios" criada ou já existe!');
+
+    }
+  });
+});
+
+
+app.get('/cadastrar', (req, res)=> { 
+console.log(req.body);
+
+
+  res.send("ok")
 })
-
-
 
 app.listen(3000, console.log("rodando"))
 

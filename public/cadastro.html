@@ -99,6 +99,21 @@
         return;
       }
 
+
+         // Enviando dados para o servidor via POST
+      fetch('/cadastrar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',  // Tipo de conteúdo sendo enviado
+        },
+        body: JSON.stringify({ nome, email, cpf, senha })  // Dados sendo enviados no body
+      })
+      .then(response => response.text())  // Espera uma resposta em JSON
+      .then(data => {
+       alert(data)
+      })
+
+
       // Se a validação for bem-sucedida, exibe uma mensagem de sucesso
       alert("Cadastro realizado com sucesso!");
       window.location.href = "login.html";  // Redireciona para a página de login
