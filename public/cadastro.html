@@ -83,40 +83,35 @@
     function cadastrar() {
       const nome = document.getElementById("nome").value;
       const email = document.getElementById("email").value;
-      const cpf = document.getElementById("cpf").value;
+      const cpf = document.getElementById("cpf").value.replace(/\D/g, ''); // Remove pontos e traços
       const senha = document.getElementById("senha").value;
 
-      // Validar se todos os campos foram preenchidos
-      if (nome.trim() === "" || email.trim() === "" || cpf.trim() === "" || senha.trim() === "") {
+      if (!nome || !email || !cpf || !senha) {
         alert("Por favor, preencha todos os campos.");
         return;
       }
 
-      // Validar CPF com expressão regular (formato XXX.XXX.XXX-XX e 11 dígitos)
-      const cpfRegex = /^(?:\d{3}\.\d{3}\.\d{3}-\d{2})$/;
-      if (!cpfRegex.test(cpf)) {
-        alert("CPF inválido. O CPF deve ter o formato XXX.XXX.XXX-XX e conter exatamente 11 dígitos.");
+      if (cpf.length !== 11) {
+        alert("CPF inválido. Deve conter exatamente 11 dígitos.");
         return;
       }
 
-
-         // Enviando dados para o servidor via POST
       fetch('/cadastrar', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',  // Tipo de conteúdo sendo enviado
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ nome, email, cpf, senha })  // Dados sendo enviados no body
+        body: JSON.stringify({ nome, email, cpf, senha })
       })
-      .then(response => response.text())  // Espera uma resposta em JSON
+      .then(response => response.text())
       .then(data => {
-       alert(data)
+        alert(data);
+        window.location.href = "login.html";
       })
-
-
-      // Se a validação for bem-sucedida, exibe uma mensagem de sucesso
-      alert("Cadastro realizado com sucesso!");
-      window.location.href = "login.html";  // Redireciona para a página de login
+      .catch(error => {
+        console.error("Erro ao cadastrar:", error);
+        alert("Erro ao cadastrar usuário.");
+      });
     }
 
     function voltarLogin() {
