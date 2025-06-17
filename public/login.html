@@ -82,12 +82,42 @@
 
   <script>
     function login() {
-      const cpf = document.getElementById("cpf").value;
-      if (cpf.trim() === "") {
+      const cpf = document.getElementById("cpf").value.trim();
+      
+      // Validação simples do CPF
+      if (cpf === "") {
         alert("Por favor, digite seu CPF.");
-      } else {
-        window.location.href = "foto.html";
+        return;
       }
+
+      // Remover caracteres não numéricos (formato XXX.XXX.XXX-XX)
+      const cpfNumerico = cpf.replace(/\D/g, '');
+      if (cpfNumerico.length !== 11) {
+        alert("CPF inválido. O CPF deve ter 11 dígitos.");
+        return;
+      }
+
+      // Enviar CPF para o servidor
+      fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ cpf: cpfNumerico })
+      })
+      .then(async response => {
+        if (!response.ok) {
+          const errorText = await response.text();
+          alert("Erro: " + errorText);  // Exibe a mensagem de erro do servidor
+          return;
+        }
+
+        alert("Login realizado com sucesso!");
+        window.location.href = "foto.html";  // Redireciona para a próxima página após login
+      })
+      .catch(() => {
+        alert("Erro ao conectar com o servidor.");
+      });
     }
   </script>
 </body>

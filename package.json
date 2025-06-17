@@ -1,7 +1,9 @@
 {
   "dependencies": {
+    "body-parser": "^2.2.0",
     "express": "^5.1.0",
     "expresss": "^0.0.0",
+    "mysql2": "^3.14.1",
     "patch": "^0.0.1",
     "path": "^0.12.7",
     "sqlite3": "^5.1.7"

@@ -67,5 +67,35 @@ app.post('/cadastrar', (req, res) => {
   });
 });
 
+// Rota para login
+app.post('/login', (req, res) => {
+  const { cpf } = req.body;
+
+  if (!cpf || cpf.length !== 11) {
+    return res.status(400).send('CPF inválido.');
+  }
+
+  const sql = `SELECT * FROM usuarios WHERE cpf = ?`;
+
+  db.get(sql, [cpf], (err, row) => {
+    if (err) {
+      return res.status(500).send('Erro no servidor.');
+    }
+    if (!row) {
+      return res.status(401).send('Usuário não encontrado. Faça cadastro primeiro.');
+    }
+    // Se quiser validar senha, pode adicionar aqui (por enquanto só CPF)
+    res.send('Login realizado com sucesso!');
+  });
+});
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+app.listen(3000, () => {
+  console.log("Servidor rodando na porta 3000");
+});
+
 // Inicia servidor na porta 3000
 app.listen(3000, () => console.log("Servidor rodando na porta 3000"));
