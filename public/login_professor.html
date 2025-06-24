@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Professor - SENAI</title>
+  <style>
+    :root {
+      --verde-professor: #2e7d32;
+      --verde-escuro: #1b5e20;
+      --cinza-claro: #f2f2f2;
+      --branco: #ffffff;
+      --cinza-escuro: #333333;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--cinza-claro);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .card {
+      background-color: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+      padding: 40px;
+      width: 400px;
+      max-width: 90%;
+      text-align: center;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .logo {
+      width: 80px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      color: var(--verde-professor);
+      margin-bottom: 30px;
+      font-size: 24px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      margin: 12px 0;
+      border: 1px solid var(--cinza-claro);
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+      transition: all 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--verde-professor);
+      box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.2);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      margin: 20px 0 10px;
+      background-color: var(--verde-professor);
+      color: var(--branco);
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    button:hover {
+      background-color: var(--verde-escuro);
+      transform: translateY(-2px);
+    }
+
+    .mensagem-rodape {
+      color: var(--cinza-escuro);
+      font-size: 14px;
+      margin-top: 20px;
+    }
+
+    .link-voltar {
+      color: var(--verde-professor);
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-block;
+      margin-top: 15px;
+    }
+
+    .link-voltar:hover {
+      text-decoration: underline;
+    }
+
+    #campo-senha-nova {
+      display: none;
+    }
+
+    .senai-logo {
+      width: 120px;
+      margin-top: 30px;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <img src="https://cdn-icons-png.flaticon.com/512/197/197386.png" alt="Professor" class="logo">
+    <h1>Login Professor</h1>
+    
+    <input type="text" placeholder="CPF (somente números)" id="cpf" maxlength="11">
+    <div id="campo-senha">
+      <input type="password" placeholder="Senha" id="senha">
+    </div>
+    <div id="campo-senha-nova">
+      <input type="password" placeholder="Crie sua senha" id="nova-senha">
+      <input type="password" placeholder="Confirme sua senha" id="confirmar-senha">
+    </div>
+    
+    <button onclick="verificarProfessor()" id="botao-login">Entrar</button>
+    
+    <div class="mensagem-rodape" id="mensagem-status">
+      Professores devem usar o CPF cadastrado no sistema acadêmico
+    </div>
+    
+    <a href="selecao_perfil.html" class="link-voltar">
+      <i class="fas fa-arrow-left"></i> Voltar para seleção de perfil
+    </a>
+  </div>
+
+  <img src="https://www.sp.senai.br/img/logo-senai.png" alt="SENAI" class="senai-logo">
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Verificar se há CPF na URL (para redirecionamento)
+      const urlParams = new URLSearchParams(window.location.search);
+      const cpfParam = urlParams.get('cpf');
+      
+      if (cpfParam) {
+        document.getElementById('cpf').value = cpfParam;
+        verificarProfessor();
+      }
+    });
+
+    function verificarProfessor() {
+      const cpf = document.getElementById('cpf').value.replace(/\D/g, '');
+      
+      if (!cpf || cpf.length !== 11) {
+        alert("Por favor, insira um CPF válido com 11 dígitos.");
+        return;
+      }
+
+      // Verificar se o professor já tem senha cadastrada
+      fetch('/verificar-professor', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ cpf })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          alert(data.message);
+          return;
+        }
+
+        if (data.temSenha) {
+          // Professor já tem senha - fazer login normal
+          const senha = document.getElementById('senha').value;
+          
+          if (!senha) {
+            alert("Por favor, insira sua senha.");
+            return;
+          }
+
+          fazerLogin(cpf, senha);
+        } else {
+          // Professor precisa criar senha
+          document.getElementById('campo-senha').style.display = 'none';
+          document.getElementById('campo-senha-nova').style.display = 'block';
+          document.getElementById('botao-login').textContent = 'Criar Senha';
+          document.getElementById('mensagem-status').textContent = 'Bem-vindo! Por favor, crie uma senha para acesso futuro.';
+          
+          // Atualizar ação do botão
+          document.getElementById('botao-login').onclick = criarSenha;
+        }
+      })
+      .catch(error => {
+        console.error("Erro:", error);
+        alert("Erro ao conectar com o servidor.");
+      });
+    }
+
+    function criarSenha() {
+      const cpf = document.getElementById('cpf').value.replace(/\D/g, '');
+      const novaSenha = document.getElementById('nova-senha').value;
+      const confirmarSenha = document.getElementById('confirmar-senha').value;
+
+      if (!novaSenha || !confirmarSenha) {
+        alert("Por favor, preencha ambos os campos de senha.");
+        return;
+      }
+
+      if (novaSenha !== confirmarSenha) {
+        alert("As senhas não coincidem. Por favor, digite novamente.");
+        return;
+      }
+
+      if (novaSenha.length < 6) {
+        alert("A senha deve ter pelo menos 6 caracteres.");
+        return;
+      }
+
+      // Registrar a nova senha
+      fetch('/criar-senha-professor', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ cpf, senha: novaSenha })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert("Senha criada com sucesso! Você será redirecionado.");
+          fazerLogin(cpf, novaSenha);
+        } else {
+          alert(data.message || "Erro ao criar senha.");
+        }
+      })
+      .catch(error => {
+        console.error("Erro:", error);
+        alert("Erro ao conectar com o servidor.");
+      });
+    }
+
+    function fazerLogin(cpf, senha) {
+      fetch('/login-professor', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ cpf, senha })
+    })
+    .then(async response => {
+      const data = await response.json();
+    
+      if (response.ok) {
+        // Armazena os dados do professor no localStorage
+        localStorage.setItem('professorLogado', JSON.stringify(data.professor));
+      
+        // Redireciona para a página principal
+        window.location.href = "bemvindo_professor.html";
+      } else {
+       alert(data.message || "Erro ao fazer login.");
+      }
+    })
+    .catch(error => {
+      console.error("Erro:", error);
+      alert("Erro ao conectar com o servidor.");
+    });
+  }
+
+    // Máscara para CPF
+    document.getElementById('cpf').addEventListener('input', function(e) {
+      this.value = this.value.replace(/\D/g, '');
+    });
+  </script>
+</body>
+</html>

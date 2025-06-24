@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>SENAI - Acesso ao Sistema</title>
+  <style>
+    :root {
+      --azul-senai: #005faa;
+      --verde-professor: #2e7d32;
+      --cinza-claro: #f2f2f2;
+      --branco: #ffffff;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--cinza-claro);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-image: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+    }
+
+    .logo-senai {
+      width: 180px;
+      margin-bottom: 40px;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    h1 {
+      color: var(--azul-senai);
+      margin-bottom: 40px;
+      font-size: 28px;
+    }
+
+    .opcoes-perfil {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+
+    .opcao {
+      background-color: var(--branco);
+      border-radius: 12px;
+      padding: 30px;
+      width: 250px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .opcao:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    .opcao.aluno {
+      border-top: 5px solid var(--azul-senai);
+    }
+
+    .opcao.professor {
+      border-top: 5px solid var(--verde-professor);
+    }
+
+    .icone-perfil {
+      font-size: 50px;
+      margin-bottom: 20px;
+    }
+
+    .aluno .icone-perfil {
+      color: var(--azul-senai);
+    }
+
+    .professor .icone-perfil {
+      color: var(--verde-professor);
+    }
+
+    .titulo-perfil {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .descricao-perfil {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .rodape {
+      margin-top: 40px;
+      color: #666;
+      font-size: 12px;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <img src="https://www.sp.senai.br/img/logo-senai.png" alt="SENAI" class="logo-senai">
+    <h1>Selecione seu perfil de acesso</h1>
+    
+    <div class="opcoes-perfil">
+      <div class="opcao aluno" onclick="window.location.href='cadastro.html'">
+        <div class="icone-perfil"><i class="fas fa-user-graduate"></i></div>
+        <div class="titulo-perfil">Sou Aluno</div>
+        <div class="descricao-perfil">Acessar portal do aluno com seu CPF</div>
+      </div>
+      
+      <div class="opcao professor" onclick="window.location.href='login_professor.html'">
+        <div class="icone-perfil"><i class="fas fa-chalkboard-teacher"></i></div>
+        <div class="titulo-perfil">Sou Professor</div>
+        <div class="descricao-perfil">Acessar sistema docente com seu CPF</div>
+      </div>
+    </div>
+    
+    <div class="rodape">
+      SENAI - Sistema de Gestão Acadêmica | Versão 1.0
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Calendário do Professor</title>
+  <style>
+    :root {
+      --azul-senai: #005faa;
+      --verde: #28a745;
+      --amarelo: #ffc107;
+      --vermelho: #dc3545;
+      --roxo: #6f42c1;
+      --cinza-fundo: #f2f2f2;
+      --cinza-borda: #cccccc;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--cinza-fundo);
+      color: #333;
+      text-align: center;
+      padding: 20px;
+      margin: 0;
+    }
+
+    .cabecalho-calendario {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      color: var(--azul-senai);
+      margin: 0;
+    }
+
+    .navegacao-mes {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .navegacao-mes button {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--azul-senai);
+    }
+
+    .legenda {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .legenda div {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: bold;
+    }
+
+    .cor {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      border: 1px solid #999;
+    }
+
+    .azul { background-color: var(--azul-senai); }
+    .verde { background-color: var(--verde); }
+    .amarelo { background-color: var(--amarelo); }
+    .vermelho { background-color: var(--vermelho); }
+    .roxo { background-color: var(--roxo); }
+
+    table {
+      margin: auto;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      width: 120px;
+      height: 100px;
+      border: 1px solid var(--cinza-borda);
+      text-align: center;
+      vertical-align: top;
+      font-size: 14px;
+      padding: 5px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    th {
+      background-color: #e9ecef;
+      font-weight: bold;
+      height: 40px;
+    }
+
+    .dia-atual {
+      background-color: #e6f7ff;
+      font-weight: bold;
+    }
+
+    .dia-outro-mes {
+      color: #aaa;
+      background-color: #f9f9f9;
+    }
+
+    .evento {
+      font-size: 12px;
+      padding: 2px 5px;
+      margin: 2px 0;
+      border-radius: 3px;
+      color: white;
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-conteudo {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 400px;
+      max-width: 90%;
+    }
+
+    .modal-titulo {
+      margin-top: 0;
+      color: var(--azul-senai);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid var(--cinza-borda);
+      border-radius: 4px;
+    }
+
+    .botoes-modal {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .botao {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .botao-primario {
+      background-color: var(--azul-senai);
+      color: white;
+    }
+
+    .botao-secundario {
+      background-color: #6c757d;
+      color: white;
+    }
+
+    .botao-perigo {
+      background-color: var(--vermelho);
+      color: white;
+    }
+
+    .botao-voltar {
+      margin-top: 40px;
+      padding: 10px 20px;
+      font-size: 15px;
+      background-color: var(--azul-senai);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .botao-voltar:hover {
+      background-color: #004080;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cabecalho-calendario">
+    <div></div> <!-- Espaço vazio para alinhamento -->
+    <h2 id="titulo-mes">Calendário</h2>
+    <div class="navegacao-mes">
+      <button id="mes-anterior">❮</button>
+      <button id="mes-seguinte">❯</button>
+    </div>
+  </div>
+
+  <div class="legenda">
+    <div><div class="cor azul"></div> Prova</div>
+    <div><div class="cor verde"></div> Palestra</div>
+    <div><div class="cor amarelo"></div> Trabalho</div>
+    <div><div class="cor vermelho"></div> Conselho</div>
+    <div><div class="cor roxo"></div> Reunião</div>
+  </div>
+
+  <table id="calendario">
+    <thead>
+      <tr>
+        <th>Dom</th>
+        <th>Seg</th>
+        <th>Ter</th>
+        <th>Qua</th>
+        <th>Qui</th>
+        <th>Sex</th>
+        <th>Sáb</th>
+      </tr>
+    </thead>
+    <tbody id="corpo-calendario">
+      <!-- Dias serão preenchidos por JavaScript -->
+    </tbody>
+  </table>
+
+  <button class="botao-voltar" onclick="window.location.href='bemvindo_professor.html'">← Voltar</button>
+
+  <!-- Modal para adicionar/editar eventos -->
+  <div class="modal" id="modal-evento">
+    <div class="modal-conteudo">
+      <h3 class="modal-titulo" id="titulo-modal">Adicionar Evento</h3>
+      <div class="form-group">
+        <label for="data-evento">Data:</label>
+        <input type="text" id="data-evento" readonly>
+      </div>
+      <div class="form-group">
+        <label for="titulo-evento">Título:</label>
+        <input type="text" id="titulo-evento" placeholder="Título do evento">
+      </div>
+      <div class="form-group">
+        <label for="tipo-evento">Tipo:</label>
+        <select id="tipo-evento">
+          <option value="azul">Prova</option>
+          <option value="verde">Palestra</option>
+          <option value="amarelo">Trabalho</option>
+          <option value="vermelho">Conselho</option>
+          <option value="roxo">Reunião</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="descricao-evento">Descrição:</label>
+        <textarea id="descricao-evento" rows="3" placeholder="Descrição do evento"></textarea>
+      </div>
+      <div class="botoes-modal">
+        <button class="botao botao-secundario" id="cancelar-evento">Cancelar</button>
+        <button class="botao botao-primario" id="salvar-evento">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para visualizar eventos -->
+  <div class="modal" id="modal-visualizar">
+    <div class="modal-conteudo">
+      <h3 class="modal-titulo" id="titulo-visualizar">Eventos do Dia</h3>
+      <div id="lista-eventos"></div>
+      <div class="botoes-modal">
+        <button class="botao botao-primario" id="fechar-visualizar">Fechar</button>
+        <button class="botao botao-perigo" id="remover-todos">Remover Todos</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Variáveis globais
+    let dataAtual = new Date();
+    let eventos = JSON.parse(localStorage.getItem('eventosProfessor')) || {};
+    let diaSelecionado = null;
+    let eventoEditando = null;
+
+    // Inicializar calendário
+    document.addEventListener('DOMContentLoaded', function() {
+      atualizarCalendario();
+      
+      // Event listeners para navegação
+      document.getElementById('mes-anterior').addEventListener('click', function() {
+        dataAtual.setMonth(dataAtual.getMonth() - 1);
+        atualizarCalendario();
+      });
+      
+      document.getElementById('mes-seguinte').addEventListener('click', function() {
+        dataAtual.setMonth(dataAtual.getMonth() + 1);
+        atualizarCalendario();
+      });
+      
+      // Event listeners para modais
+      document.getElementById('cancelar-evento').addEventListener('click', fecharModalEvento);
+      document.getElementById('salvar-evento').addEventListener('click', salvarEvento);
+      document.getElementById('fechar-visualizar').addEventListener('click', fecharModalVisualizar);
+      document.getElementById('remover-todos').addEventListener('click', removerTodosEventos);
+    });
+
+    // Atualizar o calendário com o mês/ano atual
+    function atualizarCalendario() {
+      const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+      document.getElementById('titulo-mes').textContent = `${meses[dataAtual.getMonth()]} ${dataAtual.getFullYear()}`;
+      
+      const primeiroDia = new Date(dataAtual.getFullYear(), dataAtual.getMonth(), 1);
+      const ultimoDia = new Date(dataAtual.getFullYear(), dataAtual.getMonth() + 1, 0);
+      
+      const diasNoMes = ultimoDia.getDate();
+      const diaInicio = primeiroDia.getDay();
+      
+      const corpoCalendario = document.getElementById('corpo-calendario');
+      corpoCalendario.innerHTML = '';
+      
+      let data = 1;
+      const hoje = new Date();
+      
+      for (let i = 0; i < 6; i++) {
+        if (data > diasNoMes) break;
+        
+        const linha = document.createElement('tr');
+        
+        for (let j = 0; j < 7; j++) {
+          const celula = document.createElement('td');
+          
+          if (i === 0 && j < diaInicio) {
+            // Dias do mês anterior
+            const diaAnterior = new Date(dataAtual.getFullYear(), dataAtual.getMonth(), 0);
+            const dia = diaAnterior.getDate() - (diaInicio - j - 1);
+            celula.textContent = dia;
+            celula.className = 'dia-outro-mes';
+          } else if (data > diasNoMes) {
+            // Dias do próximo mês
+            const dia = data - diasNoMes;
+            celula.textContent = dia;
+            celula.className = 'dia-outro-mes';
+            data++;
+          } else {
+            // Dias do mês atual
+            celula.textContent = data;
+            
+            // Verificar se é o dia atual
+            if (dataAtual.getFullYear() === hoje.getFullYear() && 
+                dataAtual.getMonth() === hoje.getMonth() && 
+                data === hoje.getDate()) {
+              celula.classList.add('dia-atual');
+            }
+            
+            // Adicionar eventos ao dia
+            const dataCompleta = formatarData(dataAtual.getFullYear(), dataAtual.getMonth() + 1, data);
+            if (eventos[dataCompleta]) {
+              eventos[dataCompleta].forEach(evento => {
+                const divEvento = document.createElement('div');
+                divEvento.className = `evento ${evento.tipo}-evento`;
+                divEvento.textContent = evento.titulo;
+                divEvento.title = evento.descricao || evento.titulo;
+                celula.appendChild(divEvento);
+              });
+            }
+            
+            // Adicionar evento de clique
+            celula.addEventListener('click', function() {
+              diaSelecionado = data;
+              mostrarEventosDia(dataCompleta);
+            });
+            
+            data++;
+          }
+          
+          linha.appendChild(celula);
+        }
+        
+        corpoCalendario.appendChild(linha);
+      }
+    }
+
+    // Mostrar modal com eventos do dia
+    function mostrarEventosDia(data) {
+      document.getElementById('titulo-visualizar').textContent = `Eventos - ${formatarDataParaExibicao(data)}`;
+      const listaEventos = document.getElementById('lista-eventos');
+      listaEventos.innerHTML = '';
+      
+      if (eventos[data] && eventos[data].length > 0) {
+        eventos[data].forEach((evento, index) => {
+          const divEvento = document.createElement('div');
+          divEvento.className = 'evento-item';
+          divEvento.style.backgroundColor = getCorEvento(evento.tipo);
+          divEvento.style.padding = '10px';
+          divEvento.style.margin = '10px 0';
+          divEvento.style.borderRadius = '5px';
+          divEvento.style.color = 'white';
+          
+          divEvento.innerHTML = `
+            <h4 style="margin-top: 0;">${evento.titulo}</h4>
+            <p><strong>Tipo:</strong> ${getNomeTipoEvento(evento.tipo)}</p>
+            ${evento.descricao ? `<p><strong>Descrição:</strong> ${evento.descricao}</p>` : ''}
+            <div style="display: flex; justify-content: flex-end; gap: 5px; margin-top: 10px;">
+              <button class="botao botao-primario" onclick="editarEvento('${data}', ${index})">Editar</button>
+              <button class="botao botao-perigo" onclick="removerEvento('${data}', ${index})">Remover</button>
+            </div>
+          `;
+          
+          listaEventos.appendChild(divEvento);
+        });
+      } else {
+        listaEventos.innerHTML = '<p>Nenhum evento agendado para este dia.</p>';
+        document.getElementById('remover-todos').style.display = 'none';
+      }
+      
+      // Mostrar botão para adicionar novo evento
+      const btnAdicionar = document.createElement('button');
+      btnAdicionar.className = 'botao botao-primario';
+      btnAdicionar.textContent = 'Adicionar Evento';
+      btnAdicionar.style.marginTop = '20px';
+      btnAdicionar.addEventListener('click', function() {
+        fecharModalVisualizar();
+        abrirModalNovoEvento(data);
+      });
+      
+      listaEventos.appendChild(btnAdicionar);
+      document.getElementById('modal-visualizar').style.display = 'flex';
+    }
+
+    // Abrir modal para novo evento
+    function abrirModalNovoEvento(data) {
+      document.getElementById('titulo-modal').textContent = 'Adicionar Evento';
+      document.getElementById('data-evento').value = formatarDataParaExibicao(data);
+      document.getElementById('titulo-evento').value = '';
+      document.getElementById('tipo-evento').value = 'azul';
+      document.getElementById('descricao-evento').value = '';
+      eventoEditando = null;
+      
+      document.getElementById('modal-evento').style.display = 'flex';
+    }
+
+    // Editar evento existente
+    function editarEvento(data, index) {
+      const evento = eventos[data][index];
+      document.getElementById('titulo-modal').textContent = 'Editar Evento';
+      document.getElementById('data-evento').value = formatarDataParaExibicao(data);
+      document.getElementById('titulo-evento').value = evento.titulo;
+      document.getElementById('tipo-evento').value = evento.tipo;
+      document.getElementById('descricao-evento').value = evento.descricao || '';
+      eventoEditando = { data, index };
+      
+      fecharModalVisualizar();
+      document.getElementById('modal-evento').style.display = 'flex';
+    }
+
+    // Salvar evento (novo ou editado)
+    function salvarEvento() {
+      const data = document.getElementById('data-evento').value;
+      const titulo = document.getElementById('titulo-evento').value.trim();
+      const tipo = document.getElementById('tipo-evento').value;
+      const descricao = document.getElementById('descricao-evento').value.trim();
+      
+      if (!titulo) {
+        alert('Por favor, insira um título para o evento.');
+        return;
+      }
+      
+      const dataFormatada = formatarDataParaArmazenamento(data);
+      const novoEvento = { titulo, tipo, descricao };
+      
+      if (!eventos[dataFormatada]) {
+        eventos[dataFormatada] = [];
+      }
+      
+      if (eventoEditando) {
+        // Editar evento existente
+        eventos[eventoEditando.data][eventoEditando.index] = novoEvento;
+      } else {
+        // Adicionar novo evento
+        eventos[dataFormatada].push(novoEvento);
+      }
+      
+      localStorage.setItem('eventosProfessor', JSON.stringify(eventos));
+      fecharModalEvento();
+      atualizarCalendario();
+    }
+
+    // Remover evento
+    function removerEvento(data, index) {
+      eventos[data].splice(index, 1);
+      
+      if (eventos[data].length === 0) {
+        delete eventos[data];
+      }
+      
+      localStorage.setItem('eventosProfessor', JSON.stringify(eventos));
+      mostrarEventosDia(data);
+      atualizarCalendario();
+    }
+
+    // Remover todos os eventos de um dia
+    function removerTodosEventos() {
+      const data = formatarData(dataAtual.getFullYear(), dataAtual.getMonth() + 1, diaSelecionado);
+      delete eventos[data];
+      localStorage.setItem('eventosProfessor', JSON.stringify(eventos));
+      fecharModalVisualizar();
+      atualizarCalendario();
+    }
+
+    // Fechar modais
+    function fecharModalEvento() {
+      document.getElementById('modal-evento').style.display = 'none';
+    }
+
+    function fecharModalVisualizar() {
+      document.getElementById('modal-visualizar').style.display = 'none';
+    }
+
+    // Funções auxiliares
+    function formatarData(ano, mes, dia) {
+      return `${ano}-${mes.toString().padStart(2, '0')}-${dia.toString().padStart(2, '0')}`;
+    }
+
+    function formatarDataParaExibicao(data) {
+      const [ano, mes, dia] = data.split('-');
+      return `${dia}/${mes}/${ano}`;
+    }
+
+    function formatarDataParaArmazenamento(data) {
+      const [dia, mes, ano] = data.split('/');
+      return `${ano}-${mes}-${dia}`;
+    }
+
+    function getCorEvento(tipo) {
+      const cores = {
+        azul: '#005faa',
+        verde: '#28a745',
+        amarelo: '#ffc107',
+        vermelho: '#dc3545',
+        roxo: '#6f42c1'
+      };
+      return cores[tipo] || '#6c757d';
+    }
+
+    function getNomeTipoEvento(tipo) {
+      const nomes = {
+        azul: 'Prova',
+        verde: 'Palestra',
+        amarelo: 'Trabalho',
+        vermelho: 'Conselho',
+        roxo: 'Reunião'
+      };
+      return nomes[tipo] || 'Outro';
+    }
+  </script>
+</body>
+</html>

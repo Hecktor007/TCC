@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Minhas Notas - Curso de Mecânica</title>
+  <style>
+    * { 
+      box-sizing: border-box;
+    }
+
+    :root {
+      --azul-senai: #005faa;        /* Azul SENAI */
+      --amarelo-senai: #fbc02d;     /* Amarelo SENAI */
+      --cinza-claro: #f4f4f4;       /* Cinza Claro */
+      --branco: #ffffff;            /* Branco */
+      --cinza-escuro: #333;         /* Cinza escuro para textos */
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: row;
+      height: 100vh;
+      background-color: var(--cinza-claro);
+    }
+
+    .menu-lateral {
+      width: 250px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      padding: 20px;
+      background-color: var(--azul-senai);
+      color: white;
+      border-right: 2px solid var(--cinza-escuro);
+    }
+
+    .trimestre {
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    .trimestre:hover {
+      background-color: var(--amarelo-senai);
+      color: var(--azul-senai);
+    }
+
+    .conteudo {
+      flex: 1;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      background-color: var(--branco);
+    }
+
+    .titulo {
+      font-size: 26px;
+      color: var(--azul-senai);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .nota-box {
+      width: 220px;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+      font-size: 18px;
+      background-color: var(--cinza-claro);
+    }
+
+    .nota {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 10px;
+      color: var(--azul-senai);
+    }
+
+    button {
+      padding: 12px 30px;
+      background-color: var(--azul-senai);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #004080;
+    }
+
+    button:active {
+      background-color: #003366;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Menu Lateral -->
+  <div class="menu-lateral">
+    <div class="trimestre" onclick="mostrarNotas(1)">1º Trimestre</div>
+    <div class="trimestre" onclick="mostrarNotas(2)">2º Trimestre</div>
+    <div class="trimestre" onclick="mostrarNotas(3)">3º Trimestre</div>
+    <div class="trimestre" onclick="mostrarNotas(4)">4º Trimestre</div>
+  </div>
+
+  <!-- Conteúdo -->
+  <div class="conteudo" id="areaNotas">
+    <div class="titulo">Selecione um trimestre</div>
+  </div>
+
+  <!-- Botão Voltar -->
+  <div class="conteudo">
+    <button onclick="window.location.href='bemvindo.html'">← Voltar</button>
+  </div>
+
+  <script>
+    
+  // Carregar do localStorage ou usar padrão
+  let notas = JSON.parse(localStorage.getItem('notasAluno')) || {
+    1: {
+      titulo: "Notas do 1º Trimestre",
+      materias: [
+        { nome: "Matemática", nota: 8.5 },
+        { nome: "Desenho Técnico", nota: 7.8 },
+        { nome: "Mecânica Geral", nota: 9.2 },
+        { nome: "Materiais de Construção", nota: 8.0 }
+      ]
+    },
+    2: {
+      titulo: "Notas do 2º Trimestre",
+      materias: [
+        { nome: "Matemática", nota: 7.0 },
+        { nome: "Desenho Técnico", nota: 8.4 },
+        { nome: "Mecânica Geral", nota: 8.9 },
+        { nome: "Processos de Fabricação", nota: 7.5 }
+      ]
+    },
+    3: {
+      titulo: "Notas do 3º Trimestre",
+      materias: [
+        { nome: "Matemática", nota: 9.0 },
+        { nome: "Desenho Técnico", nota: 8.2 },
+        { nome: "Termodinâmica", nota: 9.5 },
+        { nome: "Automação e Controle", nota: 9.0 }
+      ]
+    },
+    4: {
+      titulo: "Notas do 4º Trimestre",
+      materias: [
+        { nome: "Matemática", nota: 8.3 },
+        { nome: "Desenho Técnico", nota: 7.7 },
+        { nome: "Máquinas e Equipamentos", nota: 8.8 },
+        { nome: "Processos de Fabricação", nota: 8.1 }
+      ]
+    }
+  };
+
+  function mostrarNotas(trimestre) {
+    const area = document.getElementById('areaNotas');
+    area.innerHTML = `
+      <div class="titulo">${notas[trimestre].titulo}</div>
+      <button onclick="adicionarMateria(${trimestre})" style="background-color: var(--azul-senai); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-bottom: 20px;">+ Adicionar Matéria</button>
+    `;
+    
+    notas[trimestre].materias.forEach((materia, index) => {
+      const box = document.createElement('div');
+      box.className = 'nota-box';
+      box.innerHTML = `
+        <div>${materia.nome}</div>
+        <div class="nota">${materia.nota}</div>
+        <div style="margin-top: 10px;">
+          <button onclick="editarNota(${trimestre}, ${index})" style="background-color: var(--azul-senai); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-right: 5px;">Editar</button>
+          <button onclick="removerMateria(${trimestre}, ${index})" style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">Remover</button>
+        </div>
+      `;
+      area.appendChild(box);
+    });
+  }
+
+  function editarNota(trimestre, index) {
+    document.getElementById('trimestreAtual').value = trimestre;
+    document.getElementById('materiaIndex').value = index;
+    document.getElementById('nomeMateria').value = notas[trimestre].materias[index].nome;
+    document.getElementById('valorNota').value = notas[trimestre].materias[index].nota;
+    document.getElementById('tituloFormNota').textContent = `Editar ${notas[trimestre].materias[index].nome}`;
+    document.getElementById('formNota').style.display = 'block';
+  }
+
+  function adicionarMateria(trimestre) {
+    document.getElementById('trimestreAtual').value = trimestre;
+    document.getElementById('materiaIndex').value = -1; // Novo item
+    document.getElementById('nomeMateria').value = '';
+    document.getElementById('valorNota').value = '';
+    document.getElementById('tituloFormNota').textContent = 'Adicionar Matéria';
+    document.getElementById('formNota').style.display = 'block';
+  }
+
+  function salvarNota() {
+    const trimestre = parseInt(document.getElementById('trimestreAtual').value);
+    const index = parseInt(document.getElementById('materiaIndex').value);
+    const nome = document.getElementById('nomeMateria').value.trim();
+    const nota = parseFloat(document.getElementById('valorNota').value);
+
+    if (!nome || isNaN(nota)) {
+      alert("Preencha todos os campos corretamente");
+      return;
+    }
+
+    if (nota < 0 || nota > 10) {
+      alert("A nota deve estar entre 0 e 10");
+      return;
+    }
+
+    const novaMateria = { nome, nota };
+
+    if (index === -1) {
+      // Adicionar nova matéria
+      notas[trimestre].materias.push(novaMateria);
+    } else {
+      // Editar matéria existente
+      notas[trimestre].materias[index] = novaMateria;
+    }
+
+    // Salvar no localStorage
+    localStorage.setItem('notasAluno', JSON.stringify(notas));
+    
+    // Atualizar exibição
+    mostrarNotas(trimestre);
+    document.getElementById('formNota').style.display = 'none';
+  }
+
+  function removerMateria(trimestre, index) {
+    if (confirm(`Tem certeza que deseja remover ${notas[trimestre].materias[index].nome}?`)) {
+      notas[trimestre].materias.splice(index, 1);
+      localStorage.setItem('notasAluno', JSON.stringify(notas));
+      mostrarNotas(trimestre);
+    }
+  }
+
+  </script>
+
+  <!-- Adicione no final do body, antes do script existente -->
+  <div id="formNota" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.2); z-index: 1000;">
+    <h3 id="tituloFormNota">Editar Nota</h3>
+    <input type="hidden" id="trimestreAtual">
+    <input type="hidden" id="materiaIndex">
+    <div style="margin-bottom: 15px;">
+      <label>Matéria: <input type="text" id="nomeMateria" style="width: 100%; padding: 8px;"></label>
+    </div>
+    <div style="margin-bottom: 15px;">
+      <label>Nota: <input type="number" id="valorNota" min="0" max="10" step="0.1" style="width: 100%; padding: 8px;"></label>
+    </div>
+    <button onclick="salvarNota()" style="background-color: var(--azul-senai); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">Salvar</button>
+    <button onclick="document.getElementById('formNota').style.display='none'" style="background-color: #ccc; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">Cancelar</button>
+  </div>
+
+</body>
+</html>

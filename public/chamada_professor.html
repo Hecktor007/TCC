@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de Frequência</title>
+  <style>
+    :root {
+      --azul-senai: #005faa;
+      --verde: #28a745;
+      --vermelho: #dc3545;
+      --cinza-claro: #f2f2f2;
+      --cinza-medio: #cccccc;
+      --branco: #ffffff;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--cinza-claro);
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    h2 {
+      color: var(--azul-senai);
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .filtros {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .filtro-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .filtro-group label {
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .filtro-group select, .filtro-group input {
+      padding: 8px 12px;
+      border: 1px solid var(--cinza-medio);
+      border-radius: 4px;
+      min-width: 200px;
+    }
+
+    .lista-alunos {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: var(--branco);
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .aluno-header {
+      display: grid;
+      grid-template-columns: 1fr 100px 100px;
+      padding: 15px 20px;
+      background-color: var(--azul-senai);
+      color: var(--branco);
+      font-weight: bold;
+    }
+
+    .aluno-item {
+      display: grid;
+      grid-template-columns: 1fr 100px 100px;
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--cinza-claro);
+      align-items: center;
+    }
+
+    .aluno-item:last-child {
+      border-bottom: none;
+    }
+
+    .aluno-nome {
+      font-weight: 500;
+    }
+
+    .aluno-presenca {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-presenca {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-presente {
+      background-color: var(--verde);
+      color: var(--branco);
+    }
+
+    .btn-falta {
+      background-color: var(--vermelho);
+      color: var(--branco);
+    }
+
+    .btn-salvar {
+      display: block;
+      margin: 30px auto;
+      padding: 12px 30px;
+      background-color: var(--azul-senai);
+      color: var(--branco);
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .btn-salvar:hover {
+      background-color: #004080;
+    }
+
+    .btn-voltar {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background-color: transparent;
+      color: var(--azul-senai);
+      border: 1px solid var(--azul-senai);
+      border-radius: 6px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-voltar:hover {
+      background-color: var(--azul-senai);
+      color: var(--branco);
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Registro de Frequência</h2>
+
+  <div class="filtros">
+    <div class="filtro-group">
+      <label for="turma">Turma:</label>
+      <select id="turma">
+        <option value="1">Mecânica - 1º Ano</option>
+        <option value="2">Mecânica - 2º Ano</option>
+        <option value="3">Mecânica - 3º Ano</option>
+      </select>
+    </div>
+    
+    <div class="filtro-group">
+      <label for="data">Data:</label>
+      <input type="date" id="data" value="">
+    </div>
+  </div>
+
+  <div class="lista-alunos">
+    <div class="aluno-header">
+      <div>Aluno</div>
+      <div>Status</div>
+      <div>Ação</div>
+    </div>
+    
+    <div class="aluno-item">
+      <div class="aluno-nome">João Silva</div>
+      <div class="aluno-status">-</div>
+      <div class="aluno-presenca">
+        <button class="btn-presenca btn-presente" onclick="marcarPresenca(this, 'presente')">P</button>
+        <button class="btn-presenca btn-falta" onclick="marcarPresenca(this, 'falta')">F</button>
+      </div>
+    </div>
+    
+    <div class="aluno-item">
+      <div class="aluno-nome">Maria Oliveira</div>
+      <div class="aluno-status">-</div>
+      <div class="aluno-presenca">
+        <button class="btn-presenca btn-presente" onclick="marcarPresenca(this, 'presente')">P</button>
+        <button class="btn-presenca btn-falta" onclick="marcarPresenca(this, 'falta')">F</button>
+      </div>
+    </div>
+    
+    <div class="aluno-item">
+      <div class="aluno-nome">Carlos Souza</div>
+      <div class="aluno-status">-</div>
+      <div class="aluno-presenca">
+        <button class="btn-presenca btn-presente" onclick="marcarPresenca(this, 'presente')">P</button>
+        <button class="btn-presenca btn-falta" onclick="marcarPresenca(this, 'falta')">F</button>
+      </div>
+    </div>
+    
+    <div class="aluno-item">
+      <div class="aluno-nome">Ana Costa</div>
+      <div class="aluno-status">-</div>
+      <div class="aluno-presenca">
+        <button class="btn-presenca btn-presente" onclick="marcarPresenca(this, 'presente')">P</button>
+        <button class="btn-presenca btn-falta" onclick="marcarPresenca(this, 'falta')">F</button>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-salvar" onclick="salvarFrequencia()">Salvar Frequência</button>
+  <button class="btn-voltar" onclick="window.location.href='bemvindo_professor.html'">← Voltar</button>
+
+  <script>
+    // Definir data atual como padrão
+    document.addEventListener('DOMContentLoaded', function() {
+      const hoje = new Date();
+      const dataFormatada = hoje.toISOString().split('T')[0];
+      document.getElementById('data').value = dataFormatada;
+      
+      // Carregar frequência salva (simulação)
+      carregarFrequencia();
+    });
+
+    // Marcar presença/falta
+    function marcarPresenca(botao, tipo) {
+      const itemAluno = botao.closest('.aluno-item');
+      const statusElement = itemAluno.querySelector('.aluno-status');
+      
+      // Resetar todos os botões do aluno
+      const botoes = itemAluno.querySelectorAll('.btn-presenca');
+      botoes.forEach(btn => {
+        btn.style.opacity = '0.5';
+      });
+      
+      // Destacar o botão selecionado
+      botao.style.opacity = '1';
+      
+      // Atualizar status
+      if (tipo === 'presente') {
+        statusElement.textContent = 'Presente';
+        statusElement.style.color = 'var(--verde)';
+      } else {
+        statusElement.textContent = 'Falta';
+        statusElement.style.color = 'var(--vermelho)';
+      }
+    }
+
+    // Carregar frequência salva (simulação)
+    function carregarFrequencia() {
+      // Em um sistema real, isso viria do servidor
+      const frequenciaSalva = JSON.parse(localStorage.getItem('frequencia')) || {};
+      const dataAtual = document.getElementById('data').value;
+      
+      if (frequenciaSalva[dataAtual]) {
+        const itensAluno = document.querySelectorAll('.aluno-item');
+        
+        itensAluno.forEach((item, index) => {
+          const aluno = item.querySelector('.aluno-nome').textContent;
+          const status = frequenciaSalva[dataAtual][aluno];
+          
+          if (status) {
+            const statusElement = item.querySelector('.aluno-status');
+            const botoes = item.querySelectorAll('.btn-presenca');
+            
+            statusElement.textContent = status === 'presente' ? 'Presente' : 'Falta';
+            statusElement.style.color = status === 'presente' ? 'var(--verde)' : 'var(--vermelho)';
+            
+            // Destacar o botão correto
+            botoes[0].style.opacity = status === 'presente' ? '1' : '0.5';
+            botoes[1].style.opacity = status === 'falta' ? '1' : '0.5';
+          }
+        });
+      }
+    }
+
+    // Salvar frequência
+    // Substitua a função salvarFrequencia por esta versão atualizada
+function salvarFrequencia() {
+  const turma = document.getElementById('turma').value;
+  const data = document.getElementById('data').value;
+  const itensAluno = document.querySelectorAll('.aluno-item');
+  
+  const frequenciaDoDia = {
+    data: data,
+    turma: turma,
+    alunos: {}
+  };
+
+  itensAluno.forEach(item => {
+    const nome = item.querySelector('.aluno-nome').textContent;
+    const status = item.querySelector('.aluno-status').textContent;
+    
+    if (status !== '-') {
+      frequenciaDoDia.alunos[nome] = status.toLowerCase();
+    }
+  });
+
+  // Obter frequência existente ou criar nova
+  const frequenciaSalva = JSON.parse(localStorage.getItem('frequencia')) || {};
+  
+  // Se não existir registro para esta turma, criar
+  if (!frequenciaSalva[turma]) {
+    frequenciaSalva[turma] = [];
+  }
+  
+  // Verificar se já existe registro para esta data
+  const index = frequenciaSalva[turma].findIndex(item => item.data === data);
+  
+  if (index !== -1) {
+    // Atualizar registro existente
+    frequenciaSalva[turma][index] = frequenciaDoDia;
+  } else {
+    // Adicionar novo registro
+    frequenciaSalva[turma].push(frequenciaDoDia);
+  }
+
+  localStorage.setItem('frequencia', JSON.stringify(frequenciaSalva));
+  alert('Frequência salva com sucesso!');
+}
+
+  </script>
+</body>
+</html>
