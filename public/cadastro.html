@@ -55,29 +55,20 @@
       background-color: #004080;
     }
 
-    .voltar {
-      background-color: transparent;
-      color: var(--azul-senai);
-      border: none;
-      text-decoration: underline;
-      font-size: 14px;
-      margin-top: 10px;
-    }
-
-    .voltar:hover {
-      color: #003366;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
+  <div class="conteudo">
+    <button onclick="window.location.href='selecao_perfil.html'">← Voltar</button>
+  </div>
+
   <h2>Cadastro de Aluno - SENAI</h2>
   <input type="text" placeholder="Nome completo..." id="nome">
   <input type="email" placeholder="Email do SENAI..." id="email">
   <input type="text" placeholder="CPF (XXX.XXX.XXX-XX)..." id="cpf">
   <input type="password" placeholder="Senha..." id="senha">
   <button onclick="cadastrar()">Cadastrar</button>
-  <button class="voltar" onclick="voltarLogin()">← Voltar para o Login</button>
+  <button onclick="voltarLogin()">Login</button>
 
   <script>
     function cadastrar() {
